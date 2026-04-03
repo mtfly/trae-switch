@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
@@ -112,6 +113,16 @@ func (p *ProxyServer) Start(ctx context.Context) error {
 		req.URL.Scheme = "https"
 		req.URL.Host = targetURL.Host
 		req.Host = targetURL.Host
+
+		if targetURL.Path != "" && targetURL.Path != "/" {
+			targetPath := strings.TrimSuffix(targetURL.Path, "/")
+			reqPath := req.URL.Path
+			if !strings.HasPrefix(reqPath, "/") {
+				reqPath = "/" + reqPath
+			}
+			req.URL.Path = targetPath + reqPath
+		}
+
 		log.Printf("[Proxy] %s %s -> https://%s%s", req.Method, req.URL.Path, targetURL.Host, req.URL.Path)
 	}
 
