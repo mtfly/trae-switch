@@ -1,12 +1,17 @@
 <script>
   import { cn } from '../../lib/utils.js';
+  import { createEventDispatcher } from 'svelte';
+
   export let checked = false;
   export let disabled = false;
   export let className = '';
 
+  const dispatch = createEventDispatcher();
+
   function toggle() {
     if (!disabled) {
       checked = !checked;
+      dispatch('change', checked);
     }
   }
 </script>
