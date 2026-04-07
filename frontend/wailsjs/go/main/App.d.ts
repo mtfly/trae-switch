@@ -11,6 +11,12 @@ export function GetProviders():Promise<Array<Record<string, any>>>;
 
 export function GetStatus():Promise<Record<string, any>>;
 
+export function GetTrayMode():Promise<boolean>;
+
+export function HideWindow():Promise<void>;
+
+export function HideWindowWithNotification():Promise<void>;
+
 export function InstallCertificate():Promise<void>;
 
 export function IsCertificateInstalled():Promise<boolean>;
@@ -25,11 +31,17 @@ export function QuickStart():Promise<void>;
 
 export function QuickStop():Promise<void>;
 
+export function QuitApp():Promise<void>;
+
 export function RestoreHosts():Promise<void>;
 
 export function SetActiveProvider(arg1:number):Promise<void>;
 
 export function SetHosts():Promise<void>;
+
+export function SetTrayMode(arg1:boolean):Promise<void>;
+
+export function ShowWindow():Promise<void>;
 
 export function StartProxy():Promise<void>;
 

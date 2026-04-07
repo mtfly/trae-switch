@@ -16,6 +16,7 @@ type Provider struct {
 type Config struct {
 	Providers      []Provider `json:"providers"`
 	ActiveProvider int        `json:"active_provider"`
+	TrayMode       bool       `json:"tray_mode"`
 	mu             sync.RWMutex
 }
 
@@ -156,4 +157,23 @@ func GetModels() []string {
 		return []string{}
 	}
 	return provider.Models
+}
+
+func GetTrayMode() bool {
+	if cfg == nil {
+		return false
+	}
+	cfg.mu.RLock()
+	defer cfg.mu.RUnlock()
+	return cfg.TrayMode
+}
+
+func SetTrayMode(enabled bool) error {
+	if cfg == nil {
+		return nil
+	}
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+	cfg.TrayMode = enabled
+	return cfg.Save()
 }

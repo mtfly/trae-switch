@@ -22,6 +22,18 @@ export function GetStatus() {
   return window['go']['main']['App']['GetStatus']();
 }
 
+export function GetTrayMode() {
+  return window['go']['main']['App']['GetTrayMode']();
+}
+
+export function HideWindow() {
+  return window['go']['main']['App']['HideWindow']();
+}
+
+export function HideWindowWithNotification() {
+  return window['go']['main']['App']['HideWindowWithNotification']();
+}
+
 export function InstallCertificate() {
   return window['go']['main']['App']['InstallCertificate']();
 }
@@ -50,6 +62,10 @@ export function QuickStop() {
   return window['go']['main']['App']['QuickStop']();
 }
 
+export function QuitApp() {
+  return window['go']['main']['App']['QuitApp']();
+}
+
 export function RestoreHosts() {
   return window['go']['main']['App']['RestoreHosts']();
 }
@@ -60,6 +76,14 @@ export function SetActiveProvider(arg1) {
 
 export function SetHosts() {
   return window['go']['main']['App']['SetHosts']();
+}
+
+export function SetTrayMode(arg1) {
+  return window['go']['main']['App']['SetTrayMode'](arg1);
+}
+
+export function ShowWindow() {
+  return window['go']['main']['App']['ShowWindow']();
 }
 
 export function StartProxy() {

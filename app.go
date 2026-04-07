@@ -7,6 +7,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/go-toast/toast"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
+
 	"trae-switch/internal/cert"
 	"trae-switch/internal/config"
 	"trae-switch/internal/hosts"
@@ -264,4 +267,42 @@ func (a *App) shutdown(ctx context.Context) {
 			log.Printf("Failed to stop proxy: %v", err)
 		}
 	}
+}
+
+func (a *App) ShowWindow() {
+	runtime.WindowShow(a.ctx)
+	runtime.WindowSetAlwaysOnTop(a.ctx, false)
+}
+
+func (a *App) HideWindow() {
+	runtime.WindowHide(a.ctx)
+}
+
+func (a *App) HideWindowWithNotification() {
+	runtime.WindowHide(a.ctx)
+
+	notification := toast.Notification{
+		AppID:   "Trae Switch",
+		Title:   "Trae Switch",
+		Message: "程序将在后台运行，点击托盘图标恢复窗口",
+		Icon:    "", // No icon path needed for basic notification
+	}
+	if err := notification.Push(); err != nil {
+		log.Printf("Failed to send notification: %v", err)
+	}
+}
+
+func (a *App) QuitApp() {
+	if a.IsProxyRunning() {
+		a.StopProxy()
+	}
+	runtime.Quit(a.ctx)
+}
+
+func (a *App) SetTrayMode(enabled bool) error {
+	return config.SetTrayMode(enabled)
+}
+
+func (a *App) GetTrayMode() bool {
+	return config.GetTrayMode()
 }

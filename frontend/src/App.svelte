@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
   import Button from './components/ui/Button.svelte'
   import Card from './components/ui/Card.svelte'
+  import Switch from './components/ui/Switch.svelte'
 
   let status = {
     runningAsAdmin: false,
@@ -21,6 +22,7 @@
   let error = ''
   let success = ''
   let theme = 'dark'
+  let trayMode = false
 
   let showProviderModal = false
   let editingProviderIndex = -1
@@ -59,7 +61,29 @@
 
     await refreshStatus()
     await loadProviders()
+    await loadTrayMode()
   })
+
+  async function loadTrayMode() {
+    try {
+      trayMode = await window.go.main.App.GetTrayMode()
+    } catch (e) {
+      console.error('Failed to load tray mode:', e)
+    }
+  }
+
+  async function toggleTrayMode() {
+    try {
+      await window.go.main.App.SetTrayMode(trayMode)
+      if (trayMode) {
+        showSuccess('常驻任务栏已开启')
+      } else {
+        showSuccess('常驻任务栏已关闭')
+      }
+    } catch (e) {
+      showError(e.message || String(e))
+    }
+  }
 
   function toggleTheme() {
     const currentIndex = themes.findIndex((item) => item.value === theme)
@@ -438,6 +462,23 @@
 
     <Card className="p-4">
       <h2 class="mb-4 font-semibold">系统配置</h2>
+
+      <div class="mb-3 flex items-center justify-between rounded-lg bg-muted/50 p-3">
+        <div class="flex items-center gap-3">
+          {#if trayMode}
+            <span class="h-2 w-2 rounded-full bg-success"></span>
+          {:else}
+            <span class="h-2 w-2 rounded-full bg-muted-foreground"></span>
+          {/if}
+          <div>
+            <div class="text-sm font-medium">常驻任务栏</div>
+            <div class="text-xs text-muted-foreground">
+              {trayMode ? '已开启' : '已关闭'}
+            </div>
+          </div>
+        </div>
+        <Switch checked={trayMode} on:change={() => { trayMode = !trayMode; toggleTrayMode() }} />
+      </div>
 
       <div class="grid grid-cols-2 gap-3">
         <div class="rounded-lg bg-muted/50 p-3">
